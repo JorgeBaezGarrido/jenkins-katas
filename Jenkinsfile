@@ -22,6 +22,9 @@ pipeline {
             }
 
           }
+          options {
+            skipDefaultCheckout(true)
+          }
           steps {
             unstash 'code'
             sh 'ci/build-app.sh'
@@ -29,7 +32,6 @@ pipeline {
             sh 'ls'
             deleteDir()
             sh 'ls'
-            skipDefaultCheckout true
           }
         }
 
@@ -39,6 +41,9 @@ pipeline {
               image 'gradle:jdk11'
             }
 
+          }
+          options {
+            skipDefaultCheckout(true)
           }
           steps {
             unstash 'code'
