@@ -1,4 +1,22 @@
+Pipelines
+Administration
+Logout
+jenkins-katas / master
+CancelSave
+clone downParallel executionpush docker appStartSay Hellobuild apptest app
+Pipeline Settings
+Agent
+any
+Environment
+Name	Value	
+docker_username
+jorgebaezgarrido
+
+Pipeline Script
 pipeline {
+    environment {
+    docker_username = 'jorgebaezgarrido'
+  }
   agent any
   stages {
     stage('clone down') {
@@ -55,7 +73,20 @@ pipeline {
       }
     }
 
+    stage('push docker app') {
+      environment {
+        DOCKERCREDS = credentials('DOCKER')
+      }
+      steps {
+        unstash 'code'
+        sh 'ci/build-docker.sh'
+        sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin'
+        sh 'ci/push-docker.sh'
+      }
+    }
+
   }
+
   post {
     always {
       deleteDir()
