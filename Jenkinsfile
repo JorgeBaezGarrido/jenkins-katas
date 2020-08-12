@@ -57,7 +57,7 @@ pipeline {
 
     stage('push docker app') {
       environment {
-        DOCKERCREDS = credentials('DOCKER')
+        DOCKERCREDS = credentials('docker_login')
       }
       steps {
         unstash 'code'
