@@ -1,18 +1,3 @@
-Pipelines
-Administration
-Logout
-jenkins-katas / master
-CancelSave
-clone downParallel executionpush docker appStartSay Hellobuild apptest app
-Pipeline Settings
-Agent
-any
-Environment
-Name	Value	
-docker_username
-jorgebaezgarrido
-
-Pipeline Script
 pipeline {
     environment {
     docker_username = 'jorgebaezgarrido'
@@ -75,7 +60,7 @@ pipeline {
 
     stage('push docker app') {
       environment {
-        DOCKERCREDS = credentials('DOCKER')
+        DOCKERCREDS = credentials('docker_login')
       }
       steps {
         unstash 'code'
