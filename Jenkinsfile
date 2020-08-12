@@ -22,13 +22,11 @@ pipeline {
             }
 
           }
-          options {
-            skipDefaultCheckout(true)
-          }
           steps {
             unstash 'code'
             sh 'ci/build-app.sh'
             archiveArtifacts 'app/build/libs/'
+            stash(excludes: '.git', name: 'code')
             sh 'ls'
             deleteDir()
             sh 'ls'
@@ -49,6 +47,7 @@ pipeline {
             unstash 'code'
             sh 'ci/unit-test-app.sh'
             junit 'app/build/test-results/test/TEST-*.xml'
+            stash(excludes: '.git', name: 'code')
           }
         }
 
@@ -58,7 +57,6 @@ pipeline {
     stage('push docker app') {
       environment {
         DOCKERCREDS = credentials('docker_login')
-        docker_username = 'jorgebaezgarrido'
       }
       steps {
         unstash 'code'
@@ -68,6 +66,9 @@ pipeline {
       }
     }
 
+  }
+  environment {
+    docker_username = 'jorgebaezgarrido'
   }
   post {
     always {
