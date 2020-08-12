@@ -54,7 +54,7 @@ pipeline {
       }
     }
 
-    stage('push docker app') {
+    stage('build docker') {
       environment {
         DOCKERCREDS = credentials('docker_login')
       }
@@ -62,7 +62,34 @@ pipeline {
         unstash 'code'
         sh 'ci/build-docker.sh'
         sh 'echo "$DOCKERCREDS_PSW" | docker login -u "$DOCKERCREDS_USR" --password-stdin'
+        stash(excludes: '.git', name: 'code')
+      }
+    }
+
+    stage('push docker app') {
+      when {
+        branch 'master'
+      }
+      environment {
+        DOCKERCREDS = credentials('docker_login')
+      }
+      steps {
+        unstash 'code'
         sh 'ci/push-docker.sh'
+        stash(excludes: '.git', name: 'code')
+      }
+    }
+
+    stage('component test') {
+      when {
+        not {
+          branch 'dev/'
+        }
+
+      }
+      steps {
+        unstash 'code'
+        sh 'ci/component-test.sh'
       }
     }
 
