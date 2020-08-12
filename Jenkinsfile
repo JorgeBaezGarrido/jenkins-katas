@@ -58,6 +58,7 @@ pipeline {
     stage('push docker app') {
       environment {
         DOCKERCREDS = credentials('docker_login')
+        docker_username = 'jorgebaezgarrido'
       }
       steps {
         unstash 'code'
@@ -67,9 +68,6 @@ pipeline {
       }
     }
 
-  }
-  environment {
-    docker_username = 'jorgebaezgarrido'
   }
   post {
     always {
