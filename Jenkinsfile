@@ -1,7 +1,4 @@
 pipeline {
-    environment {
-    docker_username = 'jorgebaezgarrido'
-  }
   agent any
   stages {
     stage('clone down') {
@@ -71,7 +68,9 @@ pipeline {
     }
 
   }
-
+  environment {
+    docker_username = 'jorgebaezgarrido'
+  }
   post {
     always {
       deleteDir()
